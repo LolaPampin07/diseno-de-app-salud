@@ -1,0 +1,23 @@
+<h3>Prueba</h3>
+<div style="color: green; font-size: 20px">
+  <p>Bienvenido</p>
+  <input type="text" placeholder="Por favor, ingrese su nombre" oninput="AsignarNombre(this.value)" style="width: 300px; color: red" />
+  <p>El nombre ingresado es: <span id="nombre"></span></p>
+</div>
+<button onclick="Saludar()">Saludar</button>
+<script>
+  console.log("Hola mundo");
+
+  let variable = {
+    Nombre: "",
+  };
+
+  function AsignarNombre(nombre) {
+    variable.Nombre = nombre;
+    document.getElementById("nombre").textContent = variable.Nombre;
+  }
+
+  function Saludar() {
+    alert("Bienvenido " + variable.Nombre + "!");
+  }
+</script>
