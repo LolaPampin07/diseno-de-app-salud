@@ -3,9 +3,16 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
+      { path: '', component: () => import('pages/IndexPage.vue') },
+
+      // ✅ Agregá esto acá
+      {
+        path: 'mis-pacientes',
+        component: () => import('pages/mis-pacientes.vue')
+      }
     ]
   },
+
   {
     path: '/login',
     component: () => import('layouts/LoginLayout.vue'),
@@ -13,6 +20,7 @@ const routes = [
       { path: '', component: () => import('pages/LoginPage.vue') }
     ]
   },
+
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
