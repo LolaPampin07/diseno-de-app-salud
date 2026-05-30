@@ -28,3 +28,4 @@ export default defineRouter(function (/* { store, ssrContext } */) {
 
   return Router
 })
+

@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  pdf-service:
+    build: .
+    container_name: pdf-service
+    ports:
+      - "4000:4000"
+    
+    networks:
+      - omegacorp_shared
+
+networks:
+  omegacorp_shared:
+    external: true
