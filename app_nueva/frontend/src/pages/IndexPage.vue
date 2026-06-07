@@ -2,18 +2,31 @@
   <div class="page">
 
     <!-- HEADER -->
+    <img
+    src="/logout.png"
+    class="logout-btn"
+    @click="logout"
+  />
+
     <div class="header">
       <div class="left">
-        <div class="avatar">👤</div>
+        <div class="avatar">
+        👤
+      </div>
 
         <div class="text">
-          <h1>Mis pacientes</h1>
           <p>{{ doctorName }}</p>
         </div>
       </div>
     </div>
 
     <!-- BUSCADOR -->
+     
+    <div class="text">
+          <titulo>Mis Pacientes</titulo>
+      </div>
+
+
     <input
       v-model="search"
       class="search"
@@ -24,6 +37,8 @@
     <div class="counter">
       Total: {{ filteredPatients.length }} pacientes
     </div>
+
+    
 
     <!-- LISTA -->
     <div class="list">
@@ -49,6 +64,8 @@
 
 <script>
 import axios from 'axios';
+import { Dialog } from 'quasar'
+import { API_URL } from 'src/config/api'
 
 export default {
   data() {
@@ -65,7 +82,7 @@ export default {
 
       // ✅ traer pacientes reales
       const res = await axios.get(
-        'http://localhost:3001/api/mis-pacientes',
+        `http://${API_URL}:3001/api/mis-pacientes`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -77,7 +94,7 @@ export default {
 
       // ✅ opcional: info del médico
       const verify = await axios.get(
-        'http://localhost:3001/api/verify',
+        `http://${API_URL}:3001/api/verify`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -105,8 +122,27 @@ export default {
   methods: {
     goToPatient(id) {
       this.$router.push(`/miPaciente/${id}`);
-    }
+    },
+    logout() {
+  Dialog.create({
+    title: 'Cerrar sesión',
+    message: '¿Deseás salir de tu cuenta?',
+    ok: {
+      label: 'Sí, salir',
+      color: 'negative'
+    },
+    cancel: {
+      label: 'Cancelar'
+    },
+    persistent: true
+  }).onOk(() => {
+    localStorage.removeItem('token')
+    this.$router.push('/login')
+  })
+}
   }
+
+
 };
 </script>
 
@@ -143,18 +179,18 @@ export default {
   flex-direction: column;
   justify-content: center;
 }
-.text h1 {
-  margin: 0;
-  margin-bottom: 2px;   /* 👈 clave */
+.text titulo {
   font-size: 18px;
   font-weight: 600;
 }
 
 .text p {
   margin: 0;
-  font-size: 13px;
-  color: #6b7280;
+  font-size: 25px;
+  font-weight: 600;
+  color: #000000;
   line-height: 1;
+  text-transform: capitalize;
 }
 
 .header {
@@ -167,6 +203,24 @@ export default {
   align-items: center;
 
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.logout-btn {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+
+  position: fixed;
+  top: 30px;
+  right: 30px;
+
+}
+
+.logout-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 /* BUSCADOR */
@@ -199,6 +253,8 @@ export default {
 
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   cursor: pointer;
+
+  text-transform: capitalize;
 }
 
 .patient:hover {
@@ -236,6 +292,23 @@ export default {
   width: 36px;
   height: 36px;
   font-size: 14px;
+}
+
+/* LOG OUT*/
+.avatar {
+  width: 42px;
+  height: 42px;
+  background: #e0e0e0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.avatar:hover {
+  background: #d5d5d5;
 }
 
 </style>

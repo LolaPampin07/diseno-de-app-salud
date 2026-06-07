@@ -22,6 +22,7 @@ import axios from 'axios'
 import { Notify } from 'quasar'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { API_URL } from 'src/config/api'
 
 
 const router = useRouter()
@@ -35,7 +36,7 @@ const loading = ref(false)
 const login = async () => {
   loading.value = true
   try {
-    const { data } = await axios.post('http://localhost:3001/api/login', credentials.value)
+    const { data } = await axios.post(`http://${API_URL}:3001/api/login`, credentials.value)
     localStorage.setItem('username', credentials.value.username)
     localStorage.setItem('token', data.token)
 

@@ -1,18 +1,21 @@
 <template>
   <div class="page">
 
-    <!-- 🔝 HEADER -->
+    <!-- HEADER -->
     <div class="topbar">
-      <q-icon name="arrow_back" size="22px" @click="$router.back()" />
+      <q-icon
+        name="arrow_back"
+        size="22px"
+        @click="$router.push({ name: 'IndexPage' })"
+      />
 
       <div class="title">
-        <!-- ✅ nombre real -->
         <h2>{{ paciente.nombre }} {{ paciente.apellido }}</h2>
         <p>DNI {{ paciente.dni }}</p>
       </div>
     </div>
 
-    <!-- 📋 CONTENIDO -->
+    <!-- CONTENIDO -->
     <div class="content">
 
       <!-- DATOS CLINICOS -->
@@ -35,23 +38,7 @@
         </div>
       </div>
 
-      <!-- CONTACTOS (lo dejamos como dummy por ahora) -->
-      <h3 class="section-title">Contactos</h3>
-
-      <div class="card">
-        <div v-for="c in contactos" :key="c.id" class="contact">
-          <div class="circle"></div>
-
-          <div class="info">
-            <p>{{ c.name }}</p>
-            <p class="phone">{{ c.phone }}</p>
-          </div>
-
-          <span class="arrow">›</span>
-        </div>
-      </div>
-
-      <!-- 📄 PARTES REALES -->
+      <!-- PARTES -->
       <h3 class="section-title">Partes médicos</h3>
 
       <div class="card">
@@ -59,6 +46,7 @@
           v-for="p in partes"
           :key="p.id"
           class="pdf"
+          @click="verParte(p)"
         >
           <span>
             📄 Parte {{ formatDate(p.fecha_creacion) }}
@@ -67,14 +55,20 @@
           <span class="arrow">›</span>
         </div>
 
-        <div v-if="partes.length === 0" class="empty">
+        <div
+          v-if="partes.length === 0"
+          class="empty"
+        >
           No hay partes todavía
         </div>
       </div>
 
       <!-- BOTON -->
-      <button class="btn" @click="goToGrabacion">
-        Nuevo Mensaje
+      <button
+        class="btn"
+        @click="goToForm"
+      >
+        NUEVO MENSAJE
       </button>
 
     </div>
@@ -83,72 +77,80 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
+import { API_URL } from 'src/config/api'
+
 
 export default {
   data() {
     return {
       paciente: {},
-      partes: [],
-      contactos: [
-        { id: 1, name: "Contacto demo", phone: "+54 9 ..." }
-      ]
-    };
+      partes: []
+    }
   },
 
   async mounted() {
     try {
-      const token = localStorage.getItem('token');
-      const id = this.$route.params.id;
+      const token = localStorage.getItem('token')
+      const id = this.$route.params.id
 
-      // ✅ traer paciente real
       const resPaciente = await axios.get(
-        `http://localhost:3001/api/paciente/${id}`,
+        `http://${API_URL}:3001/api/paciente/${id}`,
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      );
+      )
 
-      this.paciente = resPaciente.data;
+      this.paciente = resPaciente.data
 
-      // ✅ traer partes del paciente
       const resPartes = await axios.get(
-        `http://localhost:3001/api/partes/${id}`,
+        `http://${API_URL}:3001/api/partes/${id}`,
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      );
+      )
 
-      this.partes = resPartes.data;
+      this.partes = resPartes.data
 
     } catch (error) {
-      console.error('Error cargando paciente', error);
+      console.error('Error cargando paciente', error)
     }
   },
 
-methods: {
-  goToGrabacion() {
-    this.$router.push(`/GrabacionPage/${this.paciente.id}`);
-    
-  },
+  methods: {
+    goToForm() {
+      this.$router.push(`/FormPage/${this.paciente.id}`)
+    },
 
-  formatDate(date) {
-    return new Date(date).toLocaleDateString();
+    formatDate(date) {
+      return new Date(date).toLocaleDateString('es-AR')
+    },
+    verParte(parte) {
+  const pdfUrl =
+    `http://${API_URL}:3001/uploads/${parte.archivo}`
+
+  this.$router.push({
+    path: '/verParte',
+    query: {
+      url: pdfUrl,
+      id_paciente: this.paciente.id
+    }
+  })
+}
   }
 }
-
-};
 </script>
 
 <style scoped>
-
-/* FONDO */
 .page {
   background: #f5f7fa;
   min-height: 100vh;
 }
 
-/* HEADER */
 .topbar {
   display: flex;
   align-items: center;
@@ -172,19 +174,16 @@ methods: {
   color: #6b7280;
 }
 
-/* CONTENIDO */
 .content {
   padding: 16px;
 }
 
-/* SECCIONES */
 .section-title {
   font-size: 13px;
   color: #6b7280;
   margin: 16px 0 8px;
 }
 
-/* CARDS */
 .card {
   background: white;
   border-radius: 12px;
@@ -193,7 +192,6 @@ methods: {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-/* FILAS */
 .row {
   display: flex;
   justify-content: space-between;
@@ -205,7 +203,6 @@ methods: {
   border-bottom: none;
 }
 
-/* CHIP */
 .chip {
   background: #6b7280;
   color: white;
@@ -214,32 +211,18 @@ methods: {
   font-size: 11px;
 }
 
-/* CONTACTOS */
-.contact {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.contact:last-child {
-  border-bottom: none;
-}
-
-.circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid purple;
-}
-
-/* PDF */
 .pdf {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
+  align-items: center;
+  padding: 12px 0;
   border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pdf:hover {
+  background: #f8fafc;
 }
 
 .pdf:last-child {
@@ -248,24 +231,23 @@ methods: {
 
 .empty {
   text-align: center;
-  padding: 10px;
+  padding: 12px;
   color: #888;
 }
 
-/* BOTON */
 .btn {
   width: 100%;
   margin-top: 20px;
   padding: 12px;
   border: none;
   border-radius: 10px;
-  background: #5b4bdb;
+  background: #0098BF;
   color: white;
+  cursor: pointer;
 }
 
-/* FLECHAS */
 .arrow {
   color: #999;
+  font-size: 18px;
 }
-
 </style>

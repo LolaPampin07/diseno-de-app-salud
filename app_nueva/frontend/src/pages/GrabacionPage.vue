@@ -63,6 +63,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 import { Notify } from 'quasar'
+import { API_URL } from 'src/config/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -86,7 +87,7 @@ onMounted(async () => {
     const token = localStorage.getItem('token')
 
     const res = await axios.get(
-      `http://localhost:3001/api/paciente/${route.params.id}`,
+      `http://${API_URL}:3001/api/paciente/${route.params.id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -236,12 +237,12 @@ const handleReview = () => {
   goToReview()
 }
 
-const handleSend = async () => {
+/*const handleSend = async () => {
   try {
     const token = localStorage.getItem('token')
 
     const response = await fetch(
-      'http://localhost:3001/api/generar-pdf',
+      'http://${API_URL}:3001/api/generar-pdf',
       {
         method: 'POST',
         headers: {
@@ -267,7 +268,7 @@ const handleSend = async () => {
     console.error('Error generando PDF', error)
   }
 }
-
+*/
 </script>
 
 <style scoped>
