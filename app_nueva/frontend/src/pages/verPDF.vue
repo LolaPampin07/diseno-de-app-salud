@@ -1,40 +1,61 @@
 <template>
-  <q-page class="page">
+  <q-page class="bg-grey-2 q-pa-md column" style="overflow-x: hidden; height: 100vh;">
 
-    <!-- HEADER -->
-    <div class="header">
-      <q-icon name="arrow_back" size="20px" @click="goBack" />
+    <div class="row items-center justify-between full-width q-mb-lg no-wrap">
+      
+      <div class="row items-center no-wrap col q-pr-sm">
+        <q-btn
+          round
+          class="btn-back card-interactiva q-mr-md flex flex-center q-pa-none"
+          @click="goBack"
+        >
+          <q-icon name="arrow_back" style="color: #616161;" size="36px" />
+        </q-btn>
 
-      <div class="header-text">
-        <div class="title">Informe generado</div>
-        <div class="subtitle">Podés revisarlo o compartirlo</div>
+        <div class="nombre-paciente text-capitalize ellipsis">
+          {{ nombreSeparado.nombre }}
+          {{ nombreSeparado.apellido }}
+        </div>
+      </div>
+     
+      <div class="column items-end col-auto">
+        <span class="texto-cama text-uppercase">
+          Cama
+        </span>
+        <span class="texto-numero">
+          {{ nroCama || '...' }}
+        </span>
       </div>
 
-      <q-space />
     </div>
 
-    <!-- PDF -->
-<div class="pdf-container">
-  <iframe
-    :src="pdfUrl + '#zoom=page-width'"
-    class="pdf-frame"
-  ></iframe>
+    <div class="text-h6 text-weight-bold q-mb-sm text-black full-width">
+      Informe generado
+    </div>
 
-  <div class="actions">
+    <div class="col full-width bg-white caja-redondeada shadow-1 overflow-hidden flex">
+      <iframe
+        :src="pdfUrl + '#zoom=page-width'"
+        class="full-width full-height"
+        style="border: none;"
+      ></iframe>
+    </div>
+
     <q-btn
-      label="Enviar"
-      class="btn-primary"
+      label="ENVIAR"
+      unelevated
+      class="full-width q-mt-xl q-py-sm text-weight-bold caja-redondeada card-interactiva"
+      style="background-color: #0098BF; color: white; letter-spacing: 1px;"
       @click="handleShare"
     />
-  </div>
-
-</div>
 
   </q-page>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { API_URL } from 'src/config/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -42,10 +63,19 @@ const route = useRoute()
 const pdfUrl = route.query.url
 const filename = route.query.filename
 const id_paciente = route.query.id_paciente
+const pacienteNombre = route.query.nombre || 'Paciente'
+const nroCama = route.query.cama
 
 const token = localStorage.getItem('token')
-import { API_URL } from 'src/config/api'
 
+/* Formatea el nombre recibido para romperlo limpiamente en dos líneas en el header */
+const nombreSeparado = computed(() => {
+  const partes = pacienteNombre.split(' ')
+  return {
+    nombre: partes[0] || '',
+    apellido: partes.slice(1).join(' ') || ''
+  }
+})
 
 const goBack = async () => {
    try {
@@ -68,7 +98,7 @@ const goBack = async () => {
 const handleShare = async () => {
     console.log(filename)
     try {
-        
+       
       const response = await fetch(`http://${API_URL}:3001/api/send-pdf`, {
       method: 'POST',
       headers: {
@@ -117,81 +147,8 @@ const handleShare = async () => {
     } catch (err) {
       console.error('Error generando parte', err)
     }
-
 }
-
-
 </script>
 
-<style scoped>
-.page {
-  background: #f5f7fa;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-}
 
-/* HEADER */
-.header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e0e0e0;
-}
 
-.header-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.title {
-  font-weight: 600;
-}
-
-.subtitle {
-  font-size: 12px;
-  color: #777;
-}
-
-/* PDF ocupa todo el espacio disponible */
-.pdf-container {
-  flex: 1;
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column; /* <- importante */
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.pdf-frame {
-  flex: 1;
-  width: 100%;
-  border: none;
-  min-height: 0;
-}
-/* BOTONES ABAJO */
-.actions {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.btn-primary {
-  width: 100%;
-  background: #5c6bc0;
-  color: white;
-  padding: 14px;
-  border-radius: 10px;
-}
-
-.btn-secondary {
-  width: 100%;
-  border: 1px solid #cfd8dc;
-  padding: 14px;
-  border-radius: 10px;
-}
-</style>

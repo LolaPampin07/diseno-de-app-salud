@@ -1,22 +1,126 @@
-.left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* ==========================================
+   APP.SCSS - SISTEMA DE DISEÑO GLOBAL
+   ========================================== */
+
+/* --- 1. FORMAS Y CONTENEDORES --- */
+.caja-redondeada {
+  border-radius: 10px !important;
+}
+.header-card {
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
 }
 
-.text h1 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
+.input-login .q-field__control {
+  height: 48px !important;
+  min-height: 48px !important;
 }
 
-.doctor {
-  margin: 0;
-  font-size: 13px;
-  color: #fbfbfb;
+
+.input-login .q-field__label {
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.page {
-  background: #ffffff;
+.btn-login {
+  height: 48px !important;
+}
+.page-standard {
+  background: #fafafa;
+  padding: 16px;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
+.login-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+/* Redondeo forzado para inputs de Quasar */
+.q-field--outlined .q-field__control {
+  border-radius: 10px !important;
+}
+
+/* --- 2. INTERACCIONES Y SOMBRAS --- */
+.card-interactiva {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15) !important;
+  }
+}
+
+/* --- 3. BOTONES CUSTOM --- */
+.btn-back {
+  min-width: 48px !important; 
+  width: 48px !important;
+  height: 48px !important;
+  border: none !important;
+  border-radius: 50% !important; 
+  background-color: white !important;
+}
+
+/* --- 4. TIPOGRAFÍA GLOBAL --- */
+
+/* Textos genéricos */
+.texto-1rem {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+/* Títulos y valores de los datos (Diagnóstico, Email, etc.) */
+.titulo-dato {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.valor-dato {
+  font-size: 1.2rem;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+/* Header del paciente (Nombre, Cama, Número) */
+.nombre-paciente {
+  font-size: 1.5rem;
+  color: #616161;
+  line-height: 1.2;
+}
+.nombre-usuario {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #616161;
+  line-height: 1.2;
+}
+
+.texto-cama {
+  font-size: 0.75rem;
+  font-weight: 100 !important;
+  color: #757575;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+}
+
+.texto-numero {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #333333;
+  line-height: 1;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.full-height :deep(textarea) {
+  height: 100% !important;
+  min-height: 100% !important;
+  resize: none;
+}
+

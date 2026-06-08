@@ -1,28 +1,43 @@
 <template>
-  <q-page class="page">
+  <q-page class="bg-grey-2 q-pa-md column" style="overflow-x: hidden; height: 100vh;">
 
-    <!-- HEADER -->
-    <div class="header">
-      <q-icon
-        name="arrow_back"
-        size="20px"
-        @click="goBack"
-      />
+    <div class="row items-center justify-between full-width q-mb-lg no-wrap">
+      
+      <div class="row items-center no-wrap col q-pr-sm">
+        <q-btn 
+          round
+          class="btn-back card-interactiva q-mr-md flex flex-center q-pa-none"
+          @click="goBack" 
+        >
+          <q-icon name="arrow_back" style="color: #616161;" size="36px" />
+        </q-btn>
 
-      <div class="header-text">
-        <div class="title">Parte médico</div>
-        <div class="subtitle">Historial del paciente</div>
+        <div class="nombre-paciente text-capitalize ellipsis">
+          {{ nombrePaciente }}
+        </div>
+      </div>
+      
+      <div class="column items-end col-auto">
+        <span class="texto-cama text-uppercase">
+          Cama
+        </span>
+        <span class="texto-numero">
+          {{ nroCama || '...' }}
+        </span>
       </div>
 
-      <q-space />
     </div>
 
-    <!-- PDF -->
-    <div class="pdf-container">
+    <div class="text-h6 text-weight-bold q-mb-sm text-black full-width">
+      Parte médico
+    </div>
+
+    <div class="col full-width bg-white caja-redondeada shadow-1 overflow-hidden flex">
       <iframe
         :src="pdfUrl + '#zoom=page-width'"
-        class="pdf-frame"
-      />
+        class="full-width full-height"
+        style="border: none;"
+      ></iframe>
     </div>
 
   </q-page>
@@ -34,8 +49,11 @@ import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 
+// Levantamos todas las variables enviadas por la URL desde miPaciente.vue
 const pdfUrl = route.query.url
 const id_paciente = route.query.id_paciente
+const nombrePaciente = route.query.nombre
+const nroCama = route.query.cama
 
 const goBack = () => {
   router.push(`/miPaciente/${id_paciente}`)
@@ -43,48 +61,6 @@ const goBack = () => {
 </script>
 
 <style scoped>
-.page {
-  background: #f5f7fa;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.header-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.title {
-  font-weight: 600;
-}
-
-.subtitle {
-  font-size: 12px;
-  color: #777;
-}
-
-.pdf-container {
-  flex: 1;
-  margin-top: 12px;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-}
-
-.pdf-frame {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
+/* Totalmente limpio. Todo se hereda de app.scss corporativo */
 </style>
+

@@ -1,146 +1,40 @@
 <template>
-  <div class="success-container">
-    <div class="success-content">
+  <q-page class="bg-grey-2 q-pa-md column items-center justify-center" style="overflow-x: hidden; height: 100vh;">
 
-      <div class="check-wrapper">
-        <q-icon name="check" class="check-icon" />
+    <div class="col column items-center justify-center text-center q-gutter-y-md">
+      <div class="flex flex-center" style="border: 4px solid #4CAF50; border-radius: 50%; width: 140px; height: 140px; background-color: #E8F5E9;">
+        <q-icon name="check" color="green" size="70px" />
       </div>
 
-      <h1 class="title">
+      <div class="text-h4 text-weight-bold text-black q-mt-lg">
         Informe enviado
-      </h1>
+      </div>
 
-      <p class="subtitle">
+      <div class="text-subtitle1 text-grey-7">
         El informe fue enviado correctamente.
-      </p>
-
+      </div>
     </div>
 
-    <div class="footer">
-      <q-btn
-        label="Volver al Inicio"
-        class="btn-primary"
-        unelevated
-        @click="goBack"
-      />
-    </div>
-  </div>
+    <q-btn
+      label="VOLVER AL INICIO"
+      unelevated
+      class="full-width q-py-sm text-weight-bold caja-redondeada card-interactiva"
+      style="background-color: #0098BF; color: white; letter-spacing: 1px;"
+      @click="irAlInicio"
+    />
+
+  </q-page>
 </template>
+
 <script setup>
 import { useRouter } from 'vue-router'
 
-
 const router = useRouter()
 
-const goBack = () => {
-  router.push(`/`)
+const irAlInicio = () => {
+  // Redirige al listado principal de pacientes
+  router.push({ name: 'IndexPage' })
 }
-
 </script>
-<style>
-.success-container {
-  height: 100vh;
-  background: white;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 
-  padding: 32px 24px;
-}
-
-.success-content {
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  text-align: center;
-
-  animation: fadeIn 0.5s ease;
-}
-
-.check-wrapper {
-  width: 120px;
-  height: 120px;
-
-  border-radius: 50%;
-  background: #00a65015;
-  border: 3px solid #00a650;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-bottom: 32px;
-}
-
-.check-icon {
-  font-size: 64px;
-  color: #00a650;
-
-  animation: pop 0.5s ease;
-}
-
-.title {
-  margin: 0;
-
-  font-size: 28px;
-  font-weight: 700;
-  color: #333;
-}
-
-.subtitle {
-  margin-top: 12px;
-
-  max-width: 280px;
-
-  font-size: 15px;
-  line-height: 1.5;
-  color: #777;
-}
-
-.footer {
-  padding-bottom: 16px;
-}
-
-.btn-primary {
-  width: 100%;
-  height: 52px;
-
-  background: #3483fa;
-  color: white;
-
-  border-radius: 10px;
-
-  font-weight: 600;
-}
-
-@keyframes pop {
-  0% {
-    transform: scale(0);
-  }
-
-  80% {
-    transform: scale(1.15);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-</style>

@@ -1,20 +1,62 @@
 <template>
-  <q-page class="flex flex-center column q-gutter-md">
+<q-page class="page-standard">
+
+  <div class="login-container">
 
     <!-- Logo -->
-    <img alt="Logo App" src="~assets/logoapp.png" style="width: 200px; height: auto" />
+    <div class="text-center q-mb-xl">
+      <img
+        alt="Logo App"
+        src="~assets/logoapp.png"
+        style="width:180px;height:auto;"
+      />
+    </div>
 
-    <!-- Formulario -->
-    <q-form class="q-gutter-md" style="width: 300px" @submit.prevent="login">
-      <q-input filled v-model="credentials.username" label="Usuario" :rules="[val => !!val || 'El usuario es obligatorio']" />
+    <div class="nombre-paciente text-center q-mb-xs">
+      Bienvenido
+    </div>
 
-      <q-input filled type="password" v-model="credentials.password" label="Contraseña"
-        :rules="[val => !!val || 'La contraseña es obligatoria']" />
+    <div class="texto-cama text-center q-mb-xl">
+      Ingresá tus credenciales
+    </div>
+<q-form
+  class="column"
+  style="gap: 1rem;"
+  @submit.prevent="login"
+>
 
-      <q-btn label="Ingresar" type="submit" color="primary" class="full-width" />
-    </q-form>
+  <q-input
+  v-model="credentials.username"
+  outlined
+  bg-color="white"
+  placeholder="Usuario"
+  class="input-login"
+/>
 
-  </q-page>
+<q-input
+  v-model="credentials.password"
+  outlined
+  bg-color="white"
+  type="password"
+  placeholder="Contraseña"
+  class="input-login"
+/>
+
+  <q-btn
+    label="INGRESAR"
+    type="submit"
+    unelevated
+    :loading="loading"
+    class="full-width btn-login caja-redondeada card-interactiva text-weight-bold"
+    style="background:#0098BF;color:white;"
+  />
+
+</q-form>
+  
+
+  </div>
+
+</q-page>
 </template>
 
 <script setup>

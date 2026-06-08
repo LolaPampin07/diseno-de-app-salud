@@ -1,36 +1,56 @@
-<template>
-  <q-page class="page column">
 
-    <!-- HEADER -->
-    <div class="header">
-      <q-icon name="arrow_back" size="20px" @click="goBack" />
-      <div class="header-subtitle">
-        Para: {{ paciente ? paciente.nombre + ' ' + paciente.apellido : 'Cargando...' }}
+<template>
+  <q-page class="bg-grey-2 q-pa-md column" style="overflow-x: hidden;">
+
+    <div class="row items-center justify-between full-width q-mb-lg no-wrap">
+      
+      <div class="row items-center no-wrap col q-pr-sm">
+        <q-btn 
+          round
+          class="btn-back card-interactiva q-mr-md flex flex-center q-pa-none"
+          @click="goBack" 
+        >
+          <q-icon name="arrow_back" style="color: #616161;" size="36px" />
+        </q-btn>
+
+        <div class="nombre-paciente text-capitalize ellipsis">
+          {{ paciente ? paciente.nombre : 'Cargando...' }}
+          {{ paciente ? paciente.apellido : '' }}
+        </div>
       </div>
+
+      <div class="column items-end col-auto">
+        <span class="texto-cama text-uppercase">
+          Cama
+        </span>
+        <span class="texto-numero">
+          {{ paciente ? String(paciente.nro_cama) : '...' }}
+        </span>
+      </div>
+      
     </div>
 
-    <!-- CONTENIDO -->
-    <div class="content form-content">
-
+    <div class="col column">
       <q-input
         v-model="informe"
-        label="Informe:"
+        label="Escribí el informe acá..."
         type="textarea"
         autogrow
         outlined
+        bg-color="white"
         class="full-width"
       />
-
     </div>
 
-    <!-- BOTÓN -->
-    <div class="actions">
-      <q-btn
-        label="Generar vista previa"
-        class="btn-primary"
-        @click="handlePreview"
-      />
-    </div>
+    <q-space />
+
+    <q-btn
+      label="GENERAR VISTA PREVIA"
+      unelevated
+      class="full-width q-mt-xl q-py-sm text-weight-bold caja-redondeada card-interactiva"
+      style="background-color: #0098BF; color: white; letter-spacing: 1px;"
+      @click="handlePreview"
+    />
 
   </q-page>
 </template>
@@ -46,14 +66,11 @@ const router = useRouter()
 const route = useRoute()
 
 const paciente = ref(null)
-
 const informe = ref('')
 
 
-/* 🔥 CLAVE POR PACIENTE */
 const draftKey = `informeDraft_${route.params.id}`
 
-/* ------------------ TRAER PACIENTE + RECUPERAR DRAFT ------------------ */
 onMounted(async () => {
   try {
     const token = localStorage.getItem('token')
@@ -69,13 +86,10 @@ onMounted(async () => {
 
     paciente.value = res.data
 
-    /* ✅ RECUPERAR */
     const draft = localStorage.getItem(draftKey)
     if (draft) {
       const data = JSON.parse(draft)
-
       informe.value = data.informe || ''
-
     }
 
   } catch (error) {
@@ -83,7 +97,6 @@ onMounted(async () => {
   }
 })
 
-/* ------------------ GUARDADO AUTOMÁTICO ------------------ */
 watch(
   [informe],
   () => {
@@ -97,7 +110,6 @@ watch(
   { deep: true }
 )
 
-/* ------------------ IR A PREVIEW ------------------ */
 const handlePreview = () => {
   if (!informe.value) {
     Notify.create({
@@ -109,65 +121,24 @@ const handlePreview = () => {
   }
 
   router.push({
-  name: 'revisarInforme',
-  params: {
-    id: route.params.id
-  },
-  query: {
-    informe: informe.value,
-    nombre: paciente.value
-      ? paciente.value.nombre + ' ' + paciente.value.apellido
-      : '',
-    id: route.params.id,
-  }
+    name: 'revisarInforme',
+    params: {
+      id: route.params.id
+    },
+    query: {
+      informe: informe.value,
+      nombre: paciente.value ? `${paciente.value.nombre} ${paciente.value.apellido}` : '',
+      cama: String(paciente.value.nro_cama),
+      id: route.params.id
+    }
   })
 }
 
-/* ------------------ NAV ------------------ */
 const goBack = () => {
   router.back()
 }
 </script>
 
-<style scoped>
-.page {
-  background: #f5f7fa;
-  min-height: 100vh;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-}
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-}
 
-.header-subtitle {
-  font-size: 14px;
-}
 
-.form-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 20px;
-}
-
-.actions {
-  margin-top: 20px;
-  width: 100%;
-}
-
-.btn-primary {
-  background: #0098BF; 
-  color: white;
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-}
-</style>

@@ -1,48 +1,74 @@
 <template>
-  <q-page class="page column">
+  <q-page class="bg-grey-2 q-pa-md column" style="overflow-x: hidden;">
 
-    <!-- HEADER -->
-    <div class="header">
-      <q-icon name="arrow_back" size="20px" @click="goBack" />
+    <div class="row items-center justify-between full-width q-mb-lg no-wrap">
+      
+      <div class="row items-center no-wrap col q-pr-sm">
+        <q-btn
+          round
+          class="btn-back card-interactiva q-mr-md flex flex-center q-pa-none"
+          @click="goBack"
+        >
+          <q-icon name="arrow_back" style="color: #616161;" size="36px" />
+        </q-btn>
 
-      <div class="header-text">
-        <div class="title">Vista previa del informe</div>
-        <div class="subtitle">Revisá antes de generar el PDF</div>
+        <div class="nombre-paciente text-capitalize ellipsis">
+          {{ nombreSeparado.nombre }}
+          {{ nombreSeparado.apellido }}
+        </div>
+      </div>
+     
+      <div class="column items-end col-auto">
+        <span class="texto-cama text-uppercase">
+          Cama
+        </span>
+        <span class="texto-numero">
+          {{ nroCama || '...' }}
+        </span>
       </div>
 
-      <q-space />
     </div>
 
-    <!-- CONTENIDO -->
-    <div class="content">
+    <div class="text-h6 text-weight-bold q-mb-sm text-black full-width">
+      Vista previa del informe
+    </div>
 
-      <div class="doc-container">
+    <div class="col column">
+      <div
+        class="bg-white caja-redondeada card-interactiva q-pa-md col"
+        style="overflow-y:auto;"
+      >
         <div
-          class="doc"
+          class="texto-1rem"
           v-html="contenidoHtml"
-        ></div>
+        />
       </div>
 
-      <div class="hint">
+      <div class="texto-cama text-center q-mt-sm">
         Si necesitás cambiar algo, tocá "Editar"
       </div>
-
     </div>
 
-    <!-- BOTONES -->
-    <div class="actions">
-      <q-btn
-        label="Editar"
-        flat
-        class="btn-secondary"
-        @click="handleEditar"
-      />
+    <div class="row q-col-gutter-sm q-mt-md">
+      <div class="col">
+        <q-btn
+          label="Editar"
+          outline
+          class="full-width caja-redondeada card-interactiva"
+          color="grey-7"
+          @click="handleEditar"
+        />
+      </div>
 
-      <q-btn
-        label="Generar PDF"
-        class="btn-primary"
-        @click="handleGenerarPDF"
-      />
+      <div class="col">
+        <q-btn
+          label="Generar PDF"
+          unelevated
+          class="full-width caja-redondeada card-interactiva"
+          style="background:#0098BF;color:white; letter-spacing: 1px;"
+          @click="handleGenerarPDF"
+        />
+      </div>
     </div>
 
   </q-page>
@@ -59,29 +85,33 @@ const route = useRoute()
 /* DATOS DEL FORM */
 const informe = route.query.informe || ''
 const pacienteNombre = route.query.nombre || 'Paciente'
+const nroCama = route.query.cama
+
+/* Formatea el nombre recibido para romperlo limpiamente en dos líneas en el header */
+const nombreSeparado = computed(() => {
+  const partes = pacienteNombre.split(' ')
+  return {
+    nombre: partes[0] || '',
+    apellido: partes.slice(1).join(' ') || ''
+  }
+})
 
 /* FECHA */
-const fecha = new Date().toLocaleDateString()
+const fecha = new Date().toLocaleDateString('es-AR')
 
 /* CONTENIDO HTML */
 const contenidoHtml = computed(() => `
   <p><b>Hospital Municipal Dr. Bernardo Houssay Vicente Lopez</b></p>
-
   <p>Fecha: ${fecha}</p>
-
   <p>Estimada familia de ${pacienteNombre}:</p>
-
   <p>
     ${informe}
   </p>
-
   <p><i>
     💬 "Este informe es un complemento de la comunicación médica presencial."
   </i></p>
-
   <p>
     👨‍⚕️ Dr./Dra. [Nombre]<br/>
-    [Especialidad]
   </p>
 `)
 
@@ -111,7 +141,7 @@ const handleGenerarPDF = async () => {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          id_paciente: route.params.id, 
+          id_paciente: route.params.id,
           informe: informe
         })
       }
@@ -135,7 +165,8 @@ const handleGenerarPDF = async () => {
         url: url,
         filename: fileName,
         id_paciente: route.params.id,
-        //id_medico: 
+        nombre: pacienteNombre,
+        cama: nroCama
       }
     })
 
@@ -148,84 +179,16 @@ const handleGenerarPDF = async () => {
 </script>
 
 <style scoped>
-.page {
-  background: #f5f7fa;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
+:deep(p) {
+  margin-bottom: 14px;
 }
 
-/* HEADER */
-.header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #ddd;
+:deep(b) {
+  font-weight: 700;
 }
 
-.header-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.title {
-  font-weight: 600;
-}
-
-.subtitle {
-  font-size: 12px;
-  color: #777;
-}
-
-/* CONTENIDO */
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 16px 0;
-}
-
-/* DOCUMENTO */
-.doc-container {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 12px;
-  height: 420px;
-  overflow-y: auto;
-}
-
-.doc {
-  font-family: Arial;
-  line-height: 1.5;
-}
-
-/* HINT */
-.hint {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 13px;
-  color: #777;
-}
-
-/* BOTONES */
-.actions {
-  display: flex;
-  gap: 10px;
-  margin-top: auto;
-}
-
-.btn-secondary {
-  flex: 1;
-  border: 1px solid #cfd8dc;
-  color: #607d8b;
-}
-
-.btn-primary {
-  flex: 1;
-  background: #5c6bc0;
-  color: white;
+:deep(i) {
+  color: #616161;
 }
 </style>
+
