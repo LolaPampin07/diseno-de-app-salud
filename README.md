@@ -4,6 +4,8 @@
  
 Aplicación pensada para médicos de internación clínica que permite generar y enviar partes diarios de pacientes en formato PDF a sus familiares, facilitando la comunicación y seguimiento del estado clínico.
 
+## Estado del proyecto: 🚧 MVP (Minimum Viable Product)
+
 ### 🚀 Funcionalidades
 
 - Generación de partes médicos en PDF  
@@ -19,8 +21,7 @@ Aplicación pensada para médicos de internación clínica que permite generar y
 - Infraestructura: Docker & Docker Compose  
 
 ## ⚙️ Instalación y ejecución
-
-### 1. Clonar el repositorio | Clone the repository
-
-git clone https://github.com/LolaPampin07/diseno-de-app-salud/
+1. Clonar el repositorio --> git clone https://github.com/LolaPampin07/diseno-de-app-salud/
 cd cuidapp
+2. Levantar con Docker Compose --> docker-compose up --build
+3. 
